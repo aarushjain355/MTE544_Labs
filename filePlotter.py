@@ -89,7 +89,7 @@ def plot_errors(filename):
         # Set up the legend for both axes
         l_lines = lines[0] + lines[1] + lines[2]
         labels = [line.get_label() for line in l_lines]
-        ax1.legend(l_lines, labels, loc=0)
+        ax3.legend(l_lines, labels, loc=0)
 
         plt.title(plt_title)
     
