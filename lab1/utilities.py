@@ -1,4 +1,5 @@
 from math import atan2, asin, sqrt
+import re
 
 M_PI=3.1415926535
 
@@ -52,7 +53,7 @@ class FileReader:
 
             if not read_headers:
                 for line in file:
-                    values=line.strip().split(',')
+                    values = line.strip().split(',')
 
                     for val in values:
                         if val=='':
@@ -66,10 +67,32 @@ class FileReader:
             
             # Read each line and extract values
             for line in file:
-                values = line.strip().split(',')
-                
-                row=[]                
-                
+                lineString = line.strip()
+                row = [] 
+                values = []
+
+                # Check if there's an array
+                # Only laserscan has an array, and there's just one
+                array_search = re.search(r"array\('f', \[(.+)\]\),", lineString)
+                if array_search:
+                    # Get the list inside the array
+                    array_match = array_search.group(1)
+                    # Get the index after the array
+                    after_array = array_search.end()
+
+                    # Build and record the array
+                    array = []
+                    for value in array_match.split(","):
+                        array.append(float(value.strip()))
+                    row.append(array)
+
+                    # Get the other values after the array
+                    values = lineString[(after_array + 1):].split(',')
+
+                # Do the normal stuff, which assumes each row is a list of floats
+                else:
+                    values = lineString.split(',')
+               
                 for val in values:
                     if val=='':
                         break
@@ -98,5 +121,3 @@ def euler_from_quaternion(x, y, z, w):
     yaw = atan2(yaw_term1, yaw_term2)
 
     return yaw
-
-

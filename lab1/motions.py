@@ -32,9 +32,9 @@ class motion_executioner(Node):
         
         self.type=motion_type
 
-        self.USE_REAL_ROBOT = False
+        self.USE_REAL_ROBOT = True
         
-        self.radius_=0.25
+        self.radius_=0.2
         self.linear_velocity_ = 0.5
         self.radius_increment_ = 0.01
         
