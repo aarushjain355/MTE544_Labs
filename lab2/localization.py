@@ -16,7 +16,7 @@ class localization(Node):
 
         super().__init__("localizer")
 
-        self.USE_REAL_ROBOT = False
+        self.USE_REAL_ROBOT = True
         # TODO Part 3: Define the QoS profile variable based on whether you are using the simulation (Turtlebot 3 Burger) or the real robot (Turtlebot 4)
         # Remember to define your QoS profile based on the information available in "ros2 topic info /odom --verbose" as explained in Tutorial 3
 

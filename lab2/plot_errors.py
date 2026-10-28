@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
 from utilities import FileReader
 
 
@@ -32,7 +34,11 @@ def plot_errors(filename):
     axes[1].legend()
     axes[1].grid()
 
-    plt.show()
+    output_filename = filename.replace('.csv', '_plot_Parabola_PID_Control_klp=0.2, klv=0.18, kli=0.01, kap=1.1, kav=0.75, kai=0.01.png')
+    plt.savefig(output_filename, dpi=300, bbox_inches='tight')
+    print(f"Plot saved successfully as {output_filename}")
+    plt.close()
+    #plt.show()
     
     
 

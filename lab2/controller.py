@@ -15,10 +15,10 @@ class controller:
     def __init__(self, klp=1.6, klv=0.13, kli=0.04, kap=4.0, kav=0.5, kai=0.01):
         
         # TODO Part 5 and 6: Modify the below lines to test your PD, PI, and PID controller
-        self.PID_linear=PID_ctrl(P, klp, klv, kli, filename_="linear.csv")
-        self.PID_angular=PID_ctrl(P, kap, kav, kai, filename_="angular.csv")
+        self.PID_linear=PID_ctrl(PID, klp, klv, kli, filename_="linear.csv")
+        self.PID_angular=PID_ctrl(PID, kap, kav, kai, filename_="angular.csv")
 
-        self.USE_REAL_ROBOT=False
+        self.USE_REAL_ROBOT=True
 
         # linear and angular velocity limits for the real and simulated robot
         self.real_robot_linear_vel_limit=0.31
@@ -43,6 +43,15 @@ class controller:
         else:
             linear_limit = self.simulated_robot_linear_vel_limit
             angular_limit = self.simulated_robot_angular_vel_limit
+
+        if (linear_vel > 0):
+            if (linear_vel > linear_limit):
+                print("OVER SATURATION LIMIT")
+                print(linear_vel)
+        else:
+            if (linear_vel < linear_limit):
+                print("UNDER SATURATION LIMIT")
+                print(linear_vel)
 
         linear_vel = max(-linear_limit, min(linear_vel, linear_limit))
         angular_vel = max(-angular_limit, min(angular_vel, angular_limit))
