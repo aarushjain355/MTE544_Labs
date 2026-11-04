@@ -29,6 +29,8 @@ class decision_maker(Node):
         super().__init__("decision_maker")
 
         #TODO Part 4: Create a publisher for the topic responsible for robot's motion
+
+        # Create publisher to publish the robot motion
         self.publisher= self.create_publisher(publisher_msg, publishing_topic, qos_publisher)
 
         # Goal Error thresholds
@@ -40,11 +42,13 @@ class decision_maker(Node):
         # Instantiate the controller
         # TODO Part 5: Tune your parameters here
     
+        # PID controller parameters for the point planner
         if motion_type == POINT_PLANNER:
             self.controller=controller(klp=0.2, klv=0.05, kli=0.01, kap=0.9, kav=0.4, kai=0.01)
             self.planner=planner(POINT_PLANNER)    
     
     
+        # PID controller parameters for the trajectory planner
         elif motion_type==TRAJECTORY_PLANNER:
             self.controller=trajectoryController(klp=0.2, klv=0.18, kli=0.01, kap=0.9, kav=0.75, kai=0.01)
             self.planner=planner(TRAJECTORY_PLANNER)
@@ -68,6 +72,7 @@ class decision_maker(Node):
         # TODO Part 3: Run the localization node
         # Remember that this file is already running the decision_maker node.
 
+
         spin_once(self.localizer)
 
         current_pose=self.localizer.getPose()
@@ -79,7 +84,11 @@ class decision_maker(Node):
         vel_msg=Twist()
         
         # TODO Part 3: Check if you reached the goal
+
+        # Check if the goal is a series of waypoints for trajectory tracking
         if type(self.goal) == list:
+
+            # Check if the robot has reached the final goal in the trajectory
             if (calculate_linear_error(current_pose, self.goal[-1]) < self.linear_error_threshold and 
                 abs(calculate_angular_error(current_pose, self.goal[-1])) < self.angular_error_threshold):
                 
@@ -87,6 +96,8 @@ class decision_maker(Node):
             else:
                 reached_goal=False
         else:
+
+            # Check if the robot has reached the goal for point tracking
             if (calculate_linear_error(current_pose, self.goal) < self.linear_error_threshold and 
                 abs(calculate_angular_error(current_pose, self.goal)) < self.angular_error_threshold):
                 
@@ -95,6 +106,7 @@ class decision_maker(Node):
                 reached_goal=False
         
 
+        # If goal reached, output "reached goal" message and save the logs
         if reached_goal:
             print("reached goal")
             self.publisher.publish(vel_msg)
@@ -105,11 +117,12 @@ class decision_maker(Node):
             #TODO Part 3: exit the spin
             raise SystemExit
             
-        
+        # Retrieve next velocity command
         velocity, yaw_rate = self.controller.vel_request(self.localizer.getPose(), self.goal, True)
 
         #TODO Part 4: Publish the velocity to move the robot
 
+        # Publish velocity to the robot
         vel_msg.linear.x = velocity
         vel_msg.angular.z = yaw_rate
         self.publisher.publish(vel_msg)

@@ -12,11 +12,11 @@ class planner:
         self.num_points=50 # number of points in the trajectory
         self.trajectory_type=PARABOLA # default trajectory planner
 
-        # starting and ending points for parabolic trajectory
+        # starting and ending x coordinates for parabolic trajectory
         self.parabola_x_start = 0.0
         self.parabola_x_end = 1.5
 
-        # starting and ending points for sigmoid trajectory
+        # starting and ending x coordinates for sigmoid trajectory
         self.sigmoid_x_start = 0.0
         self.sigmoid_x_end = 2.5
 
@@ -35,6 +35,8 @@ class planner:
         return x, y
 
     # TODO Part 6: Implement the trajectories here
+
+    # Check if the trajectory type is parabolic or sigmoid and call the corresponding function to generate the trajectory
     def trajectory_planner(self):
         if self.trajectory_type == PARABOLA:
             return self.parabola_trajectory(self.parabola_x_start, self.parabola_x_end)
