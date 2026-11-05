@@ -20,6 +20,7 @@ class localization(Node):
         # TODO Part 3: Define the QoS profile variable based on whether you are using the simulation (Turtlebot 3 Burger) or the real robot (Turtlebot 4)
         # Remember to define your QoS profile based on the information available in "ros2 topic info /odom --verbose" as explained in Tutorial 3
 
+        # Define odom_qos profile based on if code is executed on robot or in sim
         odom_qos = QoSProfile(
                     reliability=ReliabilityPolicy.BEST_EFFORT if self.USE_REAL_ROBOT else ReliabilityPolicy.RELIABLE,
                     durability=DurabilityPolicy.VOLATILE,
@@ -33,15 +34,19 @@ class localization(Node):
         if localizationType == rawSensor:
 
             # TODO Part 3: subscribe to the position sensor topic (Odometry)
+
+            # Subscriber for the odometry topic with the appropriate QoS profile
             self.odom_subscriber=self.create_subscription(odom, "/odom", self.odom_callback, odom_qos)
         else:
             print("This type doesn't exist", sys.stderr)
     
     
+    # Odometry subscriber callback function to read the robot's position and orientation
     def odom_callback(self, pose_msg):
         
         # TODO Part 3: Read x,y, theta, and record the stamp
 
+        # Construct the pose from the odometry message
         x = pose_msg.pose.pose.position.x
         y = pose_msg.pose.pose.position.y
         qx = pose_msg.pose.pose.orientation.x
@@ -64,6 +69,8 @@ class localization(Node):
 if __name__ == "__main__":
     init()
     node = localization()
+
+    # Spin the node to keep it alive and processing callbacks until interrupted
     try:
         spin(node)
     except KeyboardInterrupt:
