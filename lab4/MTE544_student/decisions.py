@@ -50,7 +50,7 @@ class decision_maker(Node):
         # raw odometry (the README allows rawSensors in place of kalmanFilter for lab 4);
         # the EKF (kalmanFilter, Q/R/P from lab 3 in localization.py) was giving a pose that
         # drifted from /odom, so the planner and controller used the wrong position
-        self.localizer=localization(rawSensors)
+        self.localizer=localization(kalmanFilter)
 
 
         
