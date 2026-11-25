@@ -47,8 +47,10 @@ class decision_maker(Node):
         self.reachThreshold=0.15
 
         # TODO PART 5 your localization type
-        # EKF fusing odom + IMU, with Q/R/P from lab 3 (set in localization.py)
-        self.localizer=localization(kalmanFilter)
+        # raw odometry (the README allows rawSensors in place of kalmanFilter for lab 4);
+        # the EKF (kalmanFilter, Q/R/P from lab 3 in localization.py) was giving a pose that
+        # drifted from /odom, so the planner and controller used the wrong position
+        self.localizer=localization(rawSensors)
 
 
         
