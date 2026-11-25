@@ -29,7 +29,7 @@ odom_qos=QoSProfile(reliability=2, durability=2, history=1, depth=10)
 
 class localization(Node):
     
-    def __init__(self, type, loggerName="robotPose.csv", loggerHeaders=["imu_ax", "imu_ay", "kf_ax", "kf_ay","kf_vx","kf_w","kf_x", "kf_y","stamp"]):
+    def __init__(self, type, loggerName="robotPose.csv", loggerHeaders=["imu_ax", "imu_ay", "kf_ax", "kf_ay","kf_vx","kf_w","kf_x", "kf_y","odom_x","odom_y","odom_v","odom_w","stamp"]):
 
         super().__init__("localizer")
         
@@ -92,16 +92,30 @@ class localization(Node):
                     odom_msg.twist.twist.angular.z,
                     imu_msg.linear_acceleration.x,
                     imu_msg.linear_acceleration.y])
+
+        x = odom_msg.pose.pose.position.x
+        y = odom_msg.pose.pose.position.y
+        v = odom_msg.twist.twist.linear.x
+        w = odom_msg.twist.twist.angular.z
+        ax = imu_msg.linear_acceleration.x
+        ay = imu_msg.linear_acceleration.y
+        z = np.array([v,w,ax,ay])
         
         self.kf.predict(dt)
         self.kf.update(z)
         
         xhat=self.kf.get_states()
+        kf_x, kf_y, kf_th, kf_w, kf_v, kf_vdot = xhat
+        stamp = Time.from_msg(odom_msg.header.stamp).nanoseconds
         
         self.pose=np.array([xhat[0],
                             xhat[1],
                             normalize_angle(xhat[2]),
                             odom_msg.header.stamp])
+
+
+        values_list = [ax, ay, kf_vdot, kf_v * kf_w, kf_v, kf_w, kf_x, kf_y, x, y, v, w, stamp]
+        self.loc_logger.log_values(values_list)
         
     def odom_callback(self, pose_msg):
         
