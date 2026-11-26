@@ -16,7 +16,7 @@ from utilities import *
 class mapManipulator(Node):
 
 
-    def __init__(self, filename_: str = "upper_area_final.yaml", laser_sig=0.01):
+    def __init__(self, filename_: str = "room_trial1.yaml", laser_sig=0.01):
         
         
         super().__init__('likelihood_field')

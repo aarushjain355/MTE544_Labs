@@ -62,7 +62,7 @@ class decision_maker(Node):
         elif motion_type==TRAJECTORY_PLANNER:
             # TODO PART 5 Put the gains that you concluded from lab 2
             # trajectory gains from lab2/decisions.py
-            self.controller=trajectoryController(klp=0.2, klv=0.18, kli=0.01, kap=0.9, kav=0.75, kai=0.01)
+            self.controller=trajectoryController(klp=0.1, klv=0.18, kli=0.01, kap=0.3, kav=0.65, kai=0.01)
             self.planner=planner(TRAJECTORY_PLANNER)
         
         else:

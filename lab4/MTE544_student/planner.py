@@ -8,7 +8,7 @@ POINT_PLANNER=0; TRAJECTORY_PLANNER=1
 USE_EUCLIDEAN=True
 
 class planner:
-    def __init__(self, type_, mapName="whole_area_kinda"):
+    def __init__(self, type_, mapName="room_trial1"):
 
         self.type=type_
         self.mapName=mapName
@@ -36,7 +36,7 @@ class planner:
         # the mean is located on the occupant grid. 
         # cost > 0.8 (treated as wall by A*) within ~0.67*laser_sig of an obstacle,
         # so 0.3 gives ~0.2 m clearance (TurtleBot 4 radius ~0.17 m)
-        self.m_utilites=mapManipulator(laser_sig=0.38)
+        self.m_utilites=mapManipulator(laser_sig=0.4)
             
         self.costMap=self.m_utilites.make_likelihood_field()
         
